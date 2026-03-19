@@ -12,7 +12,7 @@ const server = express(); //oferecendo ao desenvolvedor um servidor http de modo
 //recheando o servidor com funcionalidades
 
 server.get('/', (requisicao, resposta) => {
-  resposta.send(`
+    resposta.send(`
     <DOCTYPE htmk>
     <html lang = "pt-br">
     <head>
@@ -29,7 +29,7 @@ server.get('/', (requisicao, resposta) => {
     `);
 });
 
-server.get('/horaAtual', (requisicao, resposta) =>{
+server.get('/horaAtual', (requisicao, resposta) => {
     const horaAtual = new Date();
     const hora = horaAtual.getHours() + ":" + horaAtual.getMinutes() + ":" + horaAtual.getSeconds();
 
@@ -48,6 +48,68 @@ server.get('/horaAtual', (requisicao, resposta) =>{
     </body>
     </html>
         `);
+
+});
+
+//criar um metodo que aceite parametros
+
+server.get("/tabuada", (requisicao, resposta) => {
+    //tabuada de qual numero e ate qual sequencia?
+    const numero = parseInt(requisicao.query.numero);
+    const sequencia = parseInt(requisicao.query.sequencia);
+
+    if (!numero || !sequencia) {
+        resposta.setHeader('Content-Type', 'text/html');
+        resposta.send(`
+        <DOCTYPE htmk>
+    <html lang = "pt-br">
+    <head>
+        <meta charset = "UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title> Tabuada </title>
+    </head>
+    <body>
+        <h1> Primeiro programa para internet usando node + express</h1>
+        <h2> Por favor, informe o número e a sequência na URL</h2>
+        <h3> Exemplo: http://localhost:3000/tabuada?numero=5&sequencia=10 </h3>
+    </body>
+    </html>
+        `);
+    }
+
+    else{
+        resposta.setHeader('Content-Type', 'text/html');
+        resposta.write(`
+            <DOCTYPE htmk>
+    <html lang = "pt-br">
+    <head>
+        <meta charset = "UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title> Tabuada </title>
+    </head>
+    <body>
+        <h1> Primeiro programa para internet usando node + express</h1>
+        <h2> Tabuada do ${numero} até a sequência ${sequencia}</h2>
+        <ul>
+            `);
+
+        for(let i = 0; i < sequencia; i++){
+            resposta.write(`
+                <li> ${numero} x ${i} = ${numero * i}</li>
+                `);
+        }
+
+        resposta.write(`
+            </ul>
+            </body>
+    </html>
+            `);
+
+
+    }
+    resposta.end();
 
 });
 
